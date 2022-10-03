@@ -9,6 +9,8 @@ class TrackEntry:
 
 @dataclass
 class Tracklist:
-    name: Optional[str] = None
+    artist: Optional[str] = None
+    title: Optional[str] = None
     file: Optional[str] = None
+    format: Optional[str] = None
     entries: list[TrackEntry] = field(default_factory=list)
