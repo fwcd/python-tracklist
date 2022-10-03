@@ -34,3 +34,5 @@ class TabularFormat(Format):
                 str(track.start_seconds)
             ])
             lines.append(line)
+        
+        return '\n'.join(lines)

@@ -13,4 +13,5 @@ class Tracklist:
     title: Optional[str] = None
     file: Optional[str] = None
     format: Optional[str] = None
+    duration_seconds: Optional[int] = None
     entries: list[TrackEntry] = field(default_factory=list)

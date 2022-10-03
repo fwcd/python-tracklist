@@ -59,10 +59,10 @@ class CuesheetFormat(Format):
             ('TITLE', [quote(tracklist.title)] if tracklist.title else None),
             ('PERFORMER', [quote(tracklist.artist)] if tracklist.artist else None),
             ('FILE', [quote(tracklist.file or ''), tracklist.format or 'WAVE']),
-            *[[
+            *[row for i, entry in enumerate(tracklist.entries) for row in [
                 ('  TRACK', [f'{i + 1:02}', 'AUDIO']),
                 ('    TITLE', [quote(entry.title)]),
                 ('    PERFORMER', [quote(entry.artist)]),
                 ('    INDEX', ['01', _format_time(entry.start_seconds)]),
-            ] for i, entry in enumerate(tracklist.entries)]
+            ]]
         ] if args)
