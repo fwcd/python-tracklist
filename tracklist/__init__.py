@@ -1,7 +1,8 @@
 import argparse
-from contextlib import nullcontext
 import sys
 
+from contextlib import nullcontext
+from pathlib import Path
 from typing import Optional
 
 from tracklist.format import Format
@@ -9,6 +10,7 @@ from tracklist.format.cuesheet import CuesheetFormat
 from tracklist.format.tabular import TabularFormat
 from tracklist.model import Tracklist
 from tracklist.transform.cat import cat
+from tracklist.transform.ffprobe import resolve_duration
 
 _FORMATS: dict[str, Format] = {
     'cue': CuesheetFormat(),
@@ -19,8 +21,8 @@ _TRANSFORMS = {
     'cat': cat,
 }
 
-def _file_format(path: str) -> Optional[Format]:
-    return _FORMATS.get(path.split('.')[-1], None)
+def _file_format(path: Path) -> Optional[Format]:
+    return _FORMATS.get(path.suffix.split('.')[-1], None)
 
 def _open(file_like: str, mode: str):
     if file_like == '-':
@@ -35,13 +37,14 @@ def _read_inputs(paths: list[str]) -> list[Tracklist]:
     inputs: list[Tracklist] = []
 
     for path in paths:
-        format = _file_format(path)
+        format = _file_format(Path(path))
         if format is None:
             print(f"Format of {path} was not recognized, the following are supported: {', '.join(sorted(_FORMATS.keys()))}")
             sys.exit(1)
 
         with _open(path, 'r') as f:
             tracklist = format.parse(f.read())
+            tracklist = resolve_duration(tracklist, Path(path).resolve().parent)
             inputs.append(tracklist)
     
     return inputs
