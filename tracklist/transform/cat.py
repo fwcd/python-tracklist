@@ -7,7 +7,7 @@ def cat(tracklists: list[Tracklist]) -> Tracklist:
     Requires every tracklist except for the last to have a specified duration.
     """
 
-    result = Tracklist()
+    result = replace(tracklists[0], entries=[]) if tracklists else Tracklist()
     start_seconds = 0
 
     for i, tracklist in enumerate(tracklists):
