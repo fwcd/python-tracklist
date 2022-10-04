@@ -17,6 +17,7 @@ from tracklist.resolve.ffprobe import resolve_duration
 _FORMATS: dict[str, Format] = {
     'cue': CuesheetFormat(),
     'csv': TabularFormat(),
+    'colons': TabularFormat(separator=' :: '),
 }
 
 _AGGREGATIONS = {
