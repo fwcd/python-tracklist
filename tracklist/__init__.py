@@ -61,9 +61,10 @@ def main():
         description='Tracklist processor',
         epilog=textwrap.dedent('''
             examples:
-              tracklist merge a.cue b.cue > out.cue
-              tracklist cat a.cue b.cue > out.cue
-              tracklist -o out.csv cat in.cue
+              tracklist merge a.cue b.cue > out.cue # Overlay two cuesheets
+              tracklist cat   a.cue b.cue > out.cue # Concatenate two cuesheets
+              tracklist -f csv     cat in.cue       # Convert a cuesheet to CSV
+              tracklist -o out.csv cat in.cue       # Convert a cuesheet to a CSV file
             '''
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
