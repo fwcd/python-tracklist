@@ -71,8 +71,12 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
 
+    parser.add_argument('--title', help='Overrides the title for the output tracklist.')
+    parser.add_argument('--artist', help='Overrides the artist for the output tracklist.')
+    parser.add_argument('--file', help='Overrides the file name for the output tracklist.')
+    parser.add_argument('--format', help='Overrides the audio format for the output tracklist.')
     parser.add_argument('-o', '--output', type=Path, help='The output file.')
-    parser.add_argument('-f', '--format', choices=sorted(_FORMATS.keys()), help='The output format. Defaults to the format determined by the extension of the --output files and, if none are specified, to cuesheets.')
+    parser.add_argument('-f', '--output-format', choices=sorted(_FORMATS.keys()), help='The output format. Defaults to the format determined by the extension of the --output files and, if none are specified, to cuesheets.')
     parser.add_argument('aggregation', choices=sorted(_AGGREGATIONS.keys()), help='The aggregation to perform.')
     parser.add_argument('inputs', type=Path, nargs='+', help='The input files.')
 
@@ -84,10 +88,14 @@ def main():
     aggregation = _AGGREGATIONS[args.aggregation]
     output = aggregation(inputs)
 
-    output_format = None
+    output.title = args.title or output.title
+    output.artist = args.artist or output.artist
+    output.file = args.file or output.file
+    output.format = args.format or output.format
 
-    if args.format:
-        output_format = _FORMATS[args.format]
+    output_format = None
+    if args.output_format:
+        output_format = _FORMATS[args.output_format]
     elif output_path:
         output_format = _file_format(output_path)
     
