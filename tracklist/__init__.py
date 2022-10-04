@@ -9,16 +9,16 @@ from tracklist.format import Format
 from tracklist.format.cuesheet import CuesheetFormat
 from tracklist.format.tabular import TabularFormat
 from tracklist.model import Tracklist
-from tracklist.transform.cat import cat
-from tracklist.transform.ffprobe import resolve_duration
-from tracklist.transform.merge import merge
+from tracklist.aggregate.cat import cat
+from tracklist.aggregate.merge import merge
+from tracklist.resolve.ffprobe import resolve_duration
 
 _FORMATS: dict[str, Format] = {
     'cue': CuesheetFormat(),
     'csv': TabularFormat(),
 }
 
-_TRANSFORMS = {
+_AGGREGATIONS = {
     'cat': cat,
     'merge': merge,
 }
@@ -59,7 +59,7 @@ def main():
     parser = argparse.ArgumentParser(description='Tracklist processor')
     parser.add_argument('-o', '--output', type=Path, help='The output file.')
     parser.add_argument('-f', '--format', choices=sorted(_FORMATS.keys()), help='The output format. Defaults to the format determined by the extension of the --output files and, if none are specified, to cuesheets.')
-    parser.add_argument('transform', choices=sorted(_TRANSFORMS.keys()), help='The transform to perform.')
+    parser.add_argument('aggregation', choices=sorted(_AGGREGATIONS.keys()), help='The aggregation to perform.')
     parser.add_argument('inputs', type=Path, nargs='+', help='The input files.')
 
     args = parser.parse_args()
@@ -67,8 +67,8 @@ def main():
     output_path = args.output
 
     inputs = _read_inputs(input_paths)
-    transform = _TRANSFORMS[args.transform]
-    output = transform(inputs)
+    aggregation = _AGGREGATIONS[args.aggregation]
+    output = aggregation(inputs)
 
     output_format = None
 
