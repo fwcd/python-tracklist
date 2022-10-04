@@ -11,6 +11,7 @@ from tracklist.format.tabular import TabularFormat
 from tracklist.model import Tracklist
 from tracklist.transform.cat import cat
 from tracklist.transform.ffprobe import resolve_duration
+from tracklist.transform.merge import merge
 
 _FORMATS: dict[str, Format] = {
     'cue': CuesheetFormat(),
@@ -19,6 +20,7 @@ _FORMATS: dict[str, Format] = {
 
 _TRANSFORMS = {
     'cat': cat,
+    'merge': merge,
 }
 
 def _file_format(path: Path) -> Optional[Format]:
