@@ -13,22 +13,24 @@ def resolve_duration(tracklist: Tracklist, parent_dir: Path) -> Tracklist:
     and the duration is left unspecified.
     """
 
-    if tracklist.duration_seconds is not None or not tracklist.file or not shutil.which('ffprobe'):
-        return tracklist
+    if tracklist.duration_seconds is None and tracklist.file and shutil.which('ffprobe'):
+        raw_duration = subprocess.run(
+            [
+                'ffprobe',
+                '-v', 'error',
+                '-show_entries', 'format=duration',
+                '-of', 'default=noprint_wrappers=1:nokey=1',
+                tracklist.file,
+            ],
+            capture_output=True,
+            encoding='utf8',
+            cwd=parent_dir
+        ).stdout
 
-    raw_duration = subprocess.run(
-        [
-            'ffprobe',
-            '-v', 'error',
-            '-show_entries', 'format=duration',
-            '-of', 'default=noprint_wrappers=1:nokey=1',
-            tracklist.file,
-        ],
-        capture_output=True,
-        encoding='utf8',
-        cwd=parent_dir
-    ).stdout
+        try:
+            duration_seconds = math.floor(float(raw_duration))
+            return replace(tracklist, duration_seconds=duration_seconds)
+        except ValueError:
+            pass
 
-    duration_seconds = math.floor(float(raw_duration))
-
-    return replace(tracklist, duration_seconds=duration_seconds)
+    return tracklist
