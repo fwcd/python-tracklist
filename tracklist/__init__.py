@@ -1,4 +1,5 @@
 import argparse
+import textwrap
 import sys
 
 from contextlib import nullcontext
@@ -56,7 +57,18 @@ def _write_output(tracklist: Tracklist, format: Format, path: Optional[Path]=Non
         f.write(format.format(tracklist) + '\n')
 
 def main():
-    parser = argparse.ArgumentParser(description='Tracklist processor')
+    parser = argparse.ArgumentParser(
+        description='Tracklist processor',
+        epilog=textwrap.dedent('''
+            examples:
+              tracklist merge a.cue b.cue > out.cue
+              tracklist cat a.cue b.cue > out.cue
+              tracklist -o out.csv cat in.cue
+            '''
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+
     parser.add_argument('-o', '--output', type=Path, help='The output file.')
     parser.add_argument('-f', '--format', choices=sorted(_FORMATS.keys()), help='The output format. Defaults to the format determined by the extension of the --output files and, if none are specified, to cuesheets.')
     parser.add_argument('aggregation', choices=sorted(_AGGREGATIONS.keys()), help='The aggregation to perform.')
