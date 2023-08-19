@@ -2,5 +2,23 @@
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
+[project]
+name = "tracklist"
+version = "0.0.3"
+description = "Library and CLI tool for processing tracklists"
+readme = "README.md"
+classifiers = ["Topic :: Utilities"]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/fwcd/python-tracklist"
+Repository = "https://github.com/fwcd/python-tracklist"
+
+[project.scripts]
+tracklist = "tracklist:main"
+
+[tool.setuptools.packages]
+find = {}
+
 [tool.pyright]
 include = ["tracklist"]
