@@ -1,6 +1,11 @@
 .DS_Store
 .vscode
+
 *.egg-info
 __pycache__
 build
+
+venv
+.venv
+
 local
